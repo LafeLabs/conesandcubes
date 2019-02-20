@@ -1,0 +1,326 @@
+<a href = "editor.php" id = "editorphplink">editor.php</a>
+<h1 id = "toptitle">Ball and Stick Model of 2 Qubit Hilbert Space</h1>
+<table id = "rectangulartable">
+    <tr style = "color:red;">
+        <td>
+           <input/>$+$ <input/> $i\left|00\right>$
+        </td>
+    </tr>
+    <tr style = "color:green;">
+        <td>
+           <input/>$+$ <input/> $i\left|01\right>$
+        </td>
+    </tr>
+    <tr style = "color:blue;">
+        <td>
+           <input/>$+$ <input/> $i\left|10\right>$
+        </td>
+    </tr>
+    <tr  style = "color:purple;">
+        <td>
+           <input/>$+$ <input/> $i\left|11\right>$
+        </td>
+    </tr>
+</table>
+
+
+<table id = "polartable">
+    <tr  style = "color:red;">
+        <td>
+           <input/>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/> $\left|00\right>$
+        </td>
+    </tr>
+    <tr style = "color:green;">
+        <td>
+           <input/>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/> $\left|01\right>$
+        </td>
+    </tr>
+    <tr  style = "color:blue;">
+        <td>
+           <input/>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/> $\left|10\right>$
+        </td>
+    </tr>
+    <tr  style = "color:purple;">
+        <td>
+           <input/>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/> $\left|11\right>$
+        </td>
+    </tr>
+</table>
+
+<table id = "hyperspheretable">
+    <tr>
+        <td>$\theta_0$</td>
+        <td>$\theta_1$</td>
+        <td>$\theta_2$</td>
+        <td>$\phi_i$</td>
+        <td>$\left|xx\right>$</td>
+    </tr>
+    <tr style = "color:red">
+        <td>$\cos$<input/></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>$\left|00\right>$</td>
+    </tr>
+    <tr style = "color:green">
+        <td>$\sin$<input/></td>
+        <td>$\cos$<input/></td>
+        <td></td>
+        <td>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/></td>
+        <td>$\left|01\right>$</td>
+    </tr>
+    <tr style = "color:blue">
+        <td>$\sin$<input/></td>
+        <td>$\sin$<input/></td>
+        <td>$\cos$<input/></td>
+        <td>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/></td>
+        <td>$\left|10\right>$</td>
+    </tr>
+    <tr style = "color:purple">
+        <td>$\sin$<input/></td>
+        <td>$\sin$<input/></td>
+        <td>$\sin$<input/></td>
+        <td>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/></td>
+        <td>$\left|11\right>$</td>
+    </tr>
+    
+</table>
+
+
+<div id = "x3dbox">
+    <x3d id = "mainx3d">
+        <scene id = "main">
+        </scene>
+    </x3d>
+</div>
+
+
+<script>
+init();
+function init(){
+
+    rectangularinputs = document.getElementById("rectangulartable").getElementsByTagName("input");
+    polarinputs = document.getElementById("polartable").getElementsByTagName("input");
+    hypersphereinputs = document.getElementById("hyperspheretable").getElementsByTagName("input");
+    
+    real0 = 1;
+    imag0 = 0;
+    real1 = 0;
+    imag1 = 0;
+    real2 = 0;
+    imag2 = 0;
+    real3 = 0;
+    imag3 = 0;
+    
+    mag0 = 1;
+    phase0 = 0;
+    mag1 = 0;
+    phase1 = 0
+    mag2 = 0;
+    phase2 = 0;
+    mag3 = 0;
+    phase3 = 0;
+    
+    theta0 = 0;
+    theta1 = 0;
+    theta2 = 0;
+    phi0 = 0;
+    phi1 = 0;
+    phi2 = 0;
+    
+    epsilon = 0.001;
+    main = document.getElementById("main");
+
+    x = 0;
+    y = 0;
+    z = 0;
+    xhat = [1,0,0];
+    zhat = [0,0,1];
+    //yhat = zhat X xhat
+    theta = theta0;
+    phi = 0;
+    ballSize = 1;
+    stepSize = 2;
+    side3d = 1;//mag0;//size of the ball, fix at 1 for now
+    rectangularinputs[0].value = real0;
+    rectangularinputs[1].value = imag0;
+    rectangularinputs[2].value = real1;
+    rectangularinputs[3].value = imag1;
+    rectangularinputs[4].value = real2;
+    rectangularinputs[5].value = imag2;
+    rectangularinputs[6].value = real3;
+    rectangularinputs[7].value = imag3;
+
+    polarinputs[0].value = mag0;
+    polarinputs[1].value = phase0;
+    polarinputs[2].value = mag1;
+    polarinputs[3].value = phase1;
+    polarinputs[4].value = mag2;
+    polarinputs[5].value = phase2;
+    polarinputs[6].value = mag3;
+    polarinputs[7].value = phase3;
+
+/*this is physics: 
+convert the phase angles to have ground state be zero phase, and 
+compute the various angles on the N-sphere(3-sphere in this case)
+*/
+    theta0 = Math.acos(mag0);
+    theta1 = Math.acos((epsilon + mag1)/(epsilon + Math.sqrt(1 - mag0*mag0)));
+    theta2 = Math.acos((epsilon + mag2)/(epsilon + Math.sqrt(1 - mag0*mag0 - mag1*mag1*(1 - mag0*mag0))));
+
+    phi0 = phase1 - phase0;
+    phi1 = phase2 - phase0;
+    phi3 = phase3 - phase0;
+    
+    hypersphereinputs[0].value = theta0;
+    hypersphereinputs[1].value = theta0;
+    hypersphereinputs[2].value = theta1;
+    hypersphereinputs[3].value = phi0;
+    hypersphereinputs[4].value = theta0;
+    hypersphereinputs[5].value = theta1;
+    hypersphereinputs[6].value = theta2;
+    hypersphereinputs[7].value = phi1;
+    hypersphereinputs[8].value = theta0;
+    hypersphereinputs[9].value = theta1;
+    hypersphereinputs[10].value = theta2;
+    hypersphereinputs[11].value = phi2;
+
+    theta0 = Math.PI/4;
+    phi0 = Math.PI/4;
+    theta1 = 0.5;
+    phi1 = 1;
+    theta2 = -0.4;
+    
+    redraw();
+}
+
+function redraw(){
+
+
+    solidColor = "red";
+    drawCone(0,0,0,theta0,phi0); 
+    solidColor = "green";
+    drawCone(0,0,3,theta1,phi1);
+    solidColor = "blue";
+    drawCone(0,0,6,theta2,phi2);
+
+    solidColor = "#ff0000";
+    var alphaA = Math.sin(theta0)*Math.sin(theta0)*Math.cos(theta1)*Math.cos(theta1) + Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta2);
+    
+    var alphaB = Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.cos(theta2)*Math.cos(theta2) + Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta2);
+    
+    
+    drawBit(3,0,0,alphaA);//opacity is mod squared of |01> and |11>
+    solidColor = "#0000ff";
+    drawBit(3,0,2,0.5);//opacity is mod squared of |10> and |11>
+    //ground state implies no "one" for either qubit, so nothing exists
+
+}
+    
+
+function drawCone(xlocal,ylocal,zlocal,thetalocal,philocal){
+    var newt1 = document.createElement("transform");
+    var newt2 = document.createElement("transform");
+    var newt3 = document.createElement("transform");
+    var news = document.createElement("shape");
+
+    newt2.setAttribute("rotation","0 0 1 " + -thetalocal.toString());
+    newt3.setAttribute("rotation","0 1 0 " + philocal.toString());
+    newt1.setAttribute("translation",zlocal.toString() + " " + xlocal.toString() + " " + ylocal.toString() );
+
+    main.appendChild(newt1);
+    newt1.appendChild(newt3);
+
+    newt3.appendChild(newt2);
+    newt2.appendChild(news);
+
+    var newa = document.createElement("appearance");
+    news.appendChild(newa);
+    var newm = document.createElement("material");
+    newm.setAttribute("diffuseColor",solidColor);
+    newa.appendChild(newm);
+    var newb = document.createElement("cone");
+    news.appendChild(newb);
+}    
+
+function drawBit(xlocal,ylocal,zlocal,alphalocal){
+    var newt1 = document.createElement("transform");
+    var news = document.createElement("shape");
+
+    newt1.setAttribute("translation",zlocal.toString() + " " + xlocal.toString() + " " + ylocal.toString() );
+
+    main.appendChild(newt1);
+    newt1.appendChild(news);
+
+    var newa = document.createElement("appearance");
+    news.appendChild(newa);
+    var newm = document.createElement("material");
+    newm.setAttribute("diffuseColor",solidColor);
+    newm.setAttribute("transparency",alphalocal.toString());
+    newa.appendChild(newm);
+//    var newb = document.createElement("box");
+    var newb = document.createElement("cylinder");
+    news.appendChild(newb);
+    
+}
+    
+
+</script>
+
+<style>
+
+#x3dbox{
+    position:absolute;
+    left:100px;
+    right:100px;
+    top:400px;
+    bottom:10px;
+    z-index:-1;
+}
+
+#mainx3d{
+    position:absolute;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    top:0px;
+}
+
+    table{
+        font-size:36px;
+    }
+    #hyperspheretable{
+        position:absolute;
+        right:50px;
+        top:100px;
+    }
+    #polartable{
+        position:absolute;
+        left:300px;
+        top:100px;
+    }
+    #rectangulartable{
+        position:absolute;
+        left:10px;
+        top:100px;
+    }
+    td input{
+        width:1em;
+        border:solid;
+        border-width:4px;
+    }
+    #editorphplink{
+        display:block;
+        position:absolute;
+        left:0px;
+        top:0px;
+    }
+    #toptitle{
+        position:absolute;
+        z-index:-1;
+        top:0px;
+        left:0px;
+        right:0px;
+        text-align:center;
+    }
+</style>
