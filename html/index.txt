@@ -246,14 +246,14 @@ function redraw(){
     drawCone(0,0,6,theta2,phi2);
 
     solidColor = "#ff0000";
-    var alphaA = Math.sin(theta0)*Math.sin(theta0)*Math.cos(theta1)*Math.cos(theta1) + Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta2);
+    alphaA = Math.sin(theta0)*Math.sin(theta0)*Math.cos(theta1)*Math.cos(theta1) + Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta2);
     
-    var alphaB = Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.cos(theta2)*Math.cos(theta2) + Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta2);
+    alphaB = Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.cos(theta2)*Math.cos(theta2) + Math.sin(theta0)*Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta2);
     
     
     drawBit(3,0,0,alphaA);//opacity is mod squared of |01> and |11>
     solidColor = "#0000ff";
-    drawBit(3,0,2,0.5);//opacity is mod squared of |10> and |11>
+    drawBit(3,0,2,alphaB);//opacity is mod squared of |10> and |11>
     //ground state implies no "one" for either qubit, so nothing exists
 
 }
@@ -297,7 +297,7 @@ function drawBit(xlocal,ylocal,zlocal,alphalocal){
     news.appendChild(newa);
     var newm = document.createElement("material");
     newm.setAttribute("diffuseColor",solidColor);
-    newm.setAttribute("transparency",alphalocal.toString());
+    newm.setAttribute("transparency",(1 - alphalocal).toString());
     newa.appendChild(newm);
 //    var newb = document.createElement("box");
     var newb = document.createElement("cylinder");
