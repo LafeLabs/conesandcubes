@@ -45,6 +45,11 @@
            <input/>$e^{i\pi}$ <input style = "position:relative;top:-20px;left:-12px"/> $\left|11\right>$
         </td>
     </tr>
+    <tr>
+        <td id = "gobutton" class = "button">
+            GO
+        </td>
+    </tr>
 </table>
 
 <table id = "hyperspheretable">
@@ -194,9 +199,45 @@ compute the various angles on the N-sphere(3-sphere in this case)
     redraw();
 }
 
+
 function redraw(){
+    main.innerHTML = "";
 
+    mag0 = polarinputs[0].value;
+    phase0 = polarinputs[1].value;
+    mag1 = polarinputs[2].value;
+    phase1 = polarinputs[3].value;
+    mag2 = polarinputs[4].value;
+    phase2 = polarinputs[5].value;
+    mag3 = polarinputs[6].value;
+    phase3 = polarinputs[7].value;
 
+    normmag = Math.sqrt(mag0*mag0 + mag1*mag1 + mag2*mag2 + mag3*mag3);
+    mag0 = mag0/normmag;
+    mag1 = mag1/normmag;
+    mag2 = mag2/normmag;
+    mag3 = mag3/normmag;
+    phase1 -= phase0;
+    phase2 -= phase0;
+    phase3 -= phase0;
+    
+    polarinputs[0].value = mag0;
+    polarinputs[1].value = phase0;
+    polarinputs[2].value = mag1;
+    polarinputs[3].value = phase1;
+    polarinputs[4].value = mag2;
+    polarinputs[5].value = phase2;
+    polarinputs[6].value = mag3;
+    polarinputs[7].value = phase3;
+    
+    theta0 = Math.acos(mag0);
+    theta1 = Math.acos((epsilon + mag1)/(epsilon + Math.sqrt(1 - mag0*mag0)));
+    theta2 = Math.acos((epsilon + mag2)/(epsilon + Math.sqrt(1 - mag0*mag0 - mag1*mag1*(1 - mag0*mag0))));
+
+    phi0 = phase1 - phase0;
+    phi1 = phase2 - phase0;
+    phi3 = phase3 - phase0;
+    
     solidColor = "red";
     drawCone(0,0,0,theta0,phi0); 
     solidColor = "green";
@@ -264,6 +305,10 @@ function drawBit(xlocal,ylocal,zlocal,alphalocal){
     
 }
     
+document.getElementById("gobutton").onclick = function(){
+    redraw();
+}
+
 
 </script>
 
@@ -298,7 +343,16 @@ function drawBit(xlocal,ylocal,zlocal,alphalocal){
         position:absolute;
         left:300px;
         top:100px;
+        border:solid;
     }
+    #polartable input{
+        width:3em;
+    }
+    #normalizedpolartable{
+        position:absolute;
+        left:600px;
+        top:100px;
+    }    
     #rectangulartable{
         position:absolute;
         left:10px;
@@ -322,5 +376,18 @@ function drawBit(xlocal,ylocal,zlocal,alphalocal){
         left:0px;
         right:0px;
         text-align:center;
+    }
+    #gobutton{
+        border:solid;
+        border-radius:10px;
+        background-color:green;
+        border-width:3px;
+        cursor:pointer;
+    }
+    #gobutton:hover{
+        background-color:#40ff40;
+    }
+    #gobutton:active{
+        background-color:yellow;
     }
 </style>
