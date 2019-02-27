@@ -62,6 +62,18 @@
             <td class = "button t2">-</td>
             <td>$\theta_2$</td>
             <td class = "button t2">+</td>
+            <td class = "button t3">-</td>
+            <td>$\theta_3$</td>
+            <td class = "button t3">+</td>
+            <td class = "button t4">-</td>
+            <td>$\theta_4$</td>
+            <td class = "button t4">+</td>
+            <td class = "button t5">-</td>
+            <td>$\theta_5$</td>
+            <td class = "button t5">+</td>
+            <td class = "button t6">-</td>
+            <td>$\theta_6$</td>
+            <td class = "button t6">+</td>
         </tr>
         <tr id = "phibuttonrow">
             <td class = "button t0">-</td>
@@ -73,6 +85,18 @@
             <td class = "button t2">-</td>
             <td>$\phi_2$</td>
             <td class = "button t2">+</td>
+            <td class = "button t3">-</td>
+            <td>$\phi_3$</td>
+            <td class = "button t3">+</td>
+            <td class = "button t4">-</td>
+            <td>$\phi_4$</td>
+            <td class = "button t4">+</td>
+            <td class = "button t5">-</td>
+            <td>$\phi_5$</td>
+            <td class = "button t5">+</td>
+            <td class = "button t6">-</td>
+            <td>$\phi_6$</td>
+            <td class = "button t6">+</td>        
         </tr>
     </table>
     <table id = "ntable">
@@ -167,19 +191,19 @@ function redraw(){
     main.innerHTML = "";
 
     solidColor = "red";
-    drawCone(0,0,-6,theta0,phi0); 
+    drawCone(0,0,-9,theta0,phi0); 
     solidColor = "orange";
-    drawCone(0,0,-3,theta1,phi1);
+    drawCone(0,0,-6,theta1,phi1);
     solidColor = "yellow";
-    drawCone(0,0,0,theta2,phi2);
+    drawCone(0,0,-3,theta2,phi2);
     solidColor = "green";
-    drawCone(0,0,3,theta3,phi3); 
+    drawCone(0,0,0,theta3,phi3); 
     solidColor = "blue";
-    drawCone(0,0,6,theta4,phi4);
+    drawCone(0,0,3,theta4,phi4);
     solidColor = "purple";
-    drawCone(0,0,9,theta5,phi5);
+    drawCone(0,0,6,theta5,phi5);
     solidColor = "grey";
-    drawCone(0,0,12,theta6,phi6);
+    drawCone(0,0,9,theta6,phi6);
 
     solidColor = "#ff0000";
 
@@ -192,7 +216,6 @@ function redraw(){
     a6 = Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta3)*Math.sin(theta4)*Math.sin(theta5)*Math.cos(theta6);
     a7 = Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta2)*Math.sin(theta3)*Math.sin(theta4)*Math.sin(theta5)*Math.sin(theta6);    
     
-
     alphaA = a1*a1 + a3*a3 + a5*a5 + a7*a7;
     alphaB = a2*a2 + a3*a3 + a6*a6 + a7*a7;
     alphaC = a4*a4 + a5*a5 + a6*a6 + a7*a7;
@@ -294,6 +317,39 @@ thetabuttons[5].onclick = function(){
     redraw();
 }
 
+thetabuttons[6].onclick = function(){
+    theta3 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[7].onclick = function(){
+    theta3 += Math.PI/thetan;
+    redraw();
+}
+thetabuttons[8].onclick = function(){
+    theta4 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[9].onclick = function(){
+    theta4 += Math.PI/thetan;
+    redraw();
+}
+thetabuttons[10].onclick = function(){
+    theta5 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[11].onclick = function(){
+    theta5 += Math.PI/thetan;
+    redraw();
+}
+thetabuttons[12].onclick = function(){
+    theta6 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[13].onclick = function(){
+    theta6 += Math.PI/thetan;
+    redraw();
+}
+
 
 phibuttons[0].onclick = function(){
     phi0 -= Math.PI/phin;
@@ -319,6 +375,42 @@ phibuttons[5].onclick = function(){
     phi2 += Math.PI/phin;
     redraw();
 }
+
+phibuttons[6].onclick = function(){
+    phi3 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[7].onclick = function(){
+    phi3 += Math.PI/phin;
+    redraw();
+}
+phibuttons[8].onclick = function(){
+    phi4 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[9].onclick = function(){
+    phi4 += Math.PI/phin;
+    redraw();
+}
+phibuttons[10].onclick = function(){
+    phi5 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[11].onclick = function(){
+    phi5 += Math.PI/phin;
+    redraw();
+}
+phibuttons[12].onclick = function(){
+    phi6 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[13].onclick = function(){
+    phi6 += Math.PI/phin;
+    redraw();
+}
+
+
+
 document.getElementById("thetaninput").onchange = function(){
     thetan = parseInt(this.value);
 }
@@ -366,20 +458,35 @@ table{
     text-align:center;
 }
 .button:hover{
-    background-color:green;
+    background-color:white;
 }
 .button:active{
-    background-color:yellow;
+    background-color:#a0ffa0;
 }
 .t0{
-    background-color:#ffafaf;
+    background-color:red;
 }
 .t1{
-    background-color:#afffaf;
+    background-color:orange;
 }
 .t2{
-    background-color:#afafff;
+    background-color:yellow;
 }
+.t3{
+    background-color:green;
+}
+.t4{
+    background-color:blue;
+}
+.t5{
+    background-color:purple;
+}
+.t6{
+    background-color:grey;
+}
+
+
+
 .exponent{
     position:relative;
     top:-0.6em;
@@ -436,12 +543,12 @@ table{
 #equationDisplayBox{
     position:absolute;
     left:0px;
-    bottom:160px;
+    bottom:220px;
     z-index:2;
 }
 #controlPanel{
     position:absolute;
-    right:0px;
+    left:0px;
     bottom:0px;
 }
 body{
