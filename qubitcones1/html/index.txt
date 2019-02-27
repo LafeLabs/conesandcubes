@@ -1,0 +1,305 @@
+
+<div id = "qubitImagesBox">
+    <img id = "qubitsbackgroundimage"/>
+    <img id = "qubit1image"/>
+</div>
+<div id = "x3dbox">
+    <x3d id = "mainx3d">
+        <scene id = "main">
+        </scene>
+    </x3d>
+</div>
+<div id = "equationDisplayBox">
+    <table id = "equationDisplayTable">
+        <tr>
+            <td>$\Psi = $</td>
+            <td id = "a0display"></td>
+            <td>$\left|0\right> + $</td>
+            <td id = "a1display"></td>
+            <td>$e$</td>
+            <td><div class = "exponent">$i$<span id = "phi0display"></span>$\pi$</div></td>
+            <td>$\left|1\right>$</td>
+        </tr>
+    </table>
+</div>
+<div id = "controlPanel">
+    <table id = "buttontable">
+        <tr id = "thetabuttonrow">
+            <td class = "button t0">-</td>
+            <td>$\theta$</td>
+            <td class = "button t0">+</td>
+        </tr>
+        <tr id = "phibuttonrow">
+            <td class = "button t0">-</td>
+            <td>$\phi$</td>
+            <td class = "button t0">+</td>
+        </tr>
+    </table>
+    <table id = "ntable">
+        <tr>
+            <td>$\Delta\theta = $</td>
+            <td>
+                <table>
+                    <tr><td>$\pi$</td></tr>
+                    <tr><td class = "inputtd"><input id = "thetaninput"/></td></tr>
+                </table>
+            </td>
+            <td>$\Delta\phi = $</td>
+            <td>
+                <table>
+                    <tr><td>$\pi$</td></tr>
+                    <tr><td class = "inputtd"><input id = "phininput"/></td></tr>
+                </table>
+            </td>
+
+        </tr>
+    </table>
+</div>
+
+
+<script>
+init();
+function init(){
+    
+    baseimageurl = "http://lafelabs.org/symbol/svg/svg1551283114.svg";
+    qubit1imageurl= "http://lafelabs.org/symbol/svg/svg1551283078.svg";
+
+    document.getElementById("qubitsbackgroundimage").src = baseimageurl;
+    document.getElementById("qubit1image").src = qubit1imageurl;
+
+    theta0 = 0;
+    phi0 = 0;
+
+    a0 = 1;
+    main = document.getElementById("main");
+
+    x = 0;
+    y = 0;
+    z = 0;
+    xhat = [1,0,0];
+    zhat = [0,0,1];
+    //yhat = zhat X xhat
+    theta = theta0;
+    phi = 0;
+    ballSize = 1;
+    stepSize = 2;
+    side3d = 1;//mag0;//size of the ball, fix at 1 for now
+
+    thetan = 8;
+    phin = 8;
+    document.getElementById("thetaninput").value = thetan;
+    document.getElementById("phininput").value = phin;
+    
+    thetabuttons = document.getElementById("thetabuttonrow").getElementsByClassName("button");
+    phibuttons = document.getElementById("phibuttonrow").getElementsByClassName("button");
+    
+    redraw();
+}
+
+
+function redraw(){
+    main.innerHTML = "";
+
+    solidColor = "red";
+    drawCone(0,0,0,theta0,phi0); 
+
+    solidColor = "#ff0000";
+
+
+    a0 = Math.cos(theta0);
+    a1 = Math.sin(theta0);
+
+    document.getElementById("qubit1image").style.opacity = a1*a1;
+
+    document.getElementById("a0display").innerHTML = (Math.round(a0*100)/100).toString();
+    document.getElementById("a1display").innerHTML = (Math.round(a1*100)/100).toString();
+
+    document.getElementById("phi0display").innerHTML = (Math.round(((phi0%(2*Math.PI))/Math.PI)*100)/100).toString();
+
+}
+    
+
+function drawCone(xlocal,ylocal,zlocal,thetalocal,philocal){
+    var newt1 = document.createElement("transform");
+    var newt2 = document.createElement("transform");
+    var newt3 = document.createElement("transform");
+    var news = document.createElement("shape");
+
+    newt2.setAttribute("rotation","0 0 1 " + -thetalocal.toString());
+    newt3.setAttribute("rotation","0 1 0 " + philocal.toString());
+    newt1.setAttribute("translation",zlocal.toString() + " " + xlocal.toString() + " " + ylocal.toString() );
+
+    main.appendChild(newt1);
+    newt1.appendChild(newt3);
+
+    newt3.appendChild(newt2);
+    newt2.appendChild(news);
+
+    var newa = document.createElement("appearance");
+    news.appendChild(newa);
+    var newm = document.createElement("material");
+    newm.setAttribute("diffuseColor",solidColor);
+    newa.appendChild(newm);
+    var newb = document.createElement("cone");
+    news.appendChild(newb);
+}    
+
+function drawBit(xlocal,ylocal,zlocal,alphalocal){
+    var newt1 = document.createElement("transform");
+    var news = document.createElement("shape");
+
+    newt1.setAttribute("translation",zlocal.toString() + " " + xlocal.toString() + " " + ylocal.toString() );
+
+    main.appendChild(newt1);
+    newt1.appendChild(news);
+
+    var newa = document.createElement("appearance");
+    news.appendChild(newa);
+    var newm = document.createElement("material");
+    newm.setAttribute("diffuseColor",solidColor);
+    newm.setAttribute("transparency",(1 - alphalocal).toString());
+    newa.appendChild(newm);
+//    var newb = document.createElement("box");
+    var newb = document.createElement("cylinder");
+    news.appendChild(newb);
+    
+}
+    
+thetabuttons[0].onclick = function(){
+    theta0 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[1].onclick = function(){
+    theta0 += Math.PI/thetan;
+    redraw();
+}
+
+
+phibuttons[0].onclick = function(){
+    phi0 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[1].onclick = function(){
+    phi0 += Math.PI/phin;
+    redraw();
+}
+
+
+document.getElementById("thetaninput").onchange = function(){
+    thetan = parseInt(this.value);
+}
+
+document.getElementById("phininput").onchange = function(){
+    phin = parseInt(this.value);
+}
+
+</script>
+
+<style>
+
+#x3dbox{
+    position:absolute;
+    left:100px;
+    right:100px;
+    top:200px;
+    bottom:200px;
+    z-index:-1;
+}
+#mainx3d{
+    position:absolute;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    top:0px;
+}
+table{
+    font-size:36px;
+}
+#editorphplink{
+    display:block;
+    position:absolute;
+    left:0px;
+    top:0px;
+    z-index:2;
+}
+.button{
+    border:solid;
+    border-radius:50%;
+    border-width:3px;
+    cursor:pointer;
+    width:40px;
+    font-size:30px;
+    text-align:center;
+}
+.button:hover{
+    background-color:green;
+}
+.button:active{
+    background-color:yellow;
+}
+.t0{
+    background-color:#ffafaf;
+}
+.t1{
+    background-color:#afffaf;
+}
+.t2{
+    background-color:#afafff;
+}
+.exponent{
+    position:relative;
+    top:-0.6em;
+}
+.inputtd{
+    border-top:solid;
+    border-width:4px;
+}
+.inputtd input{
+    font-family:courier;
+    width:2em;
+    font-size:36px;
+}
+#ntable{
+    font-size:36px;
+}
+#qubitImagesBox{
+    width:400px;
+    height:150px;
+    position:absolute;
+    overflow:hidden;
+    left:0px;
+    top:0px;
+}
+#qubitsbackgroundimage{
+    width:300px;
+    position:absolute;
+    left:0px;
+    top:0px;
+    z-index:-1;
+}
+#qubit1image{
+    width:150px;
+    position:absolute;
+    left:0px;
+    top:0px;
+    z-index:0;
+}
+#qubit2image{
+    width:150px;
+    position:absolute;
+    right:0px;
+    top:0px;
+    z-index:0;
+}
+#equationDisplayBox{
+    position:absolute;
+    left:0px;
+    bottom:160px;
+    z-index:2;
+}
+#controlPanel{
+    position:absolute;
+    right:0px;
+    bottom:0px;
+}
+</style>
