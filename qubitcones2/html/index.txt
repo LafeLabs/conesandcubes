@@ -19,15 +19,15 @@
             <td>$\left|00\right> + $</td>
             <td id = "a1display"></td>
             <td>$e$</td>
-            <td><div>$i$<span id = "phi0display"></span></div></td>
+            <td><div class = "exponent">$i$<span id = "phi0display"></span>$\pi$</div></td>
             <td>$\left|01\right> + $</td>
             <td id = "a2display"></td>
             <td>$e$</td>
-            <td><div>$i$<span  id = "phi1display"></span></div></td>
+            <td><div class = "exponent">$i$<span  id = "phi1display"></span></div></td>
             <td>$\left|10\right> + $</td>
             <td id = "a3display"></td>
             <td>$e$</td>
-            <td><div>$i$<span id = "phi2display"></span></div></td>
+            <td><div class = "exponent">$i$<span id = "phi2display"></span></div></td>
             <td>$\left|11\right>$</td>
         </tr>
     </table>
@@ -35,29 +35,29 @@
 <div id = "controlPanel">
     <table id = "buttontable">
         <tr id = "thetabuttonrow">
-            <td class = "button">-</td>
+            <td class = "button t0">-</td>
             <td>$\theta_0$</td>
-            <td class = "button">+</td>
-            <td class = "button">-</td>
+            <td class = "button t0">+</td>
+            <td class = "button t1">-</td>
             <td>$\theta_1$</td>
-            <td class = "button">+</td>
-            <td class = "button">-</td>
+            <td class = "button t1">+</td>
+            <td class = "button t2">-</td>
             <td>$\theta_2$</td>
-            <td class = "button">+</td>
+            <td class = "button t2">+</td>
         </tr>
         <tr id = "phibuttonrow">
-            <td class = "button">-</td>
+            <td class = "button t0">-</td>
             <td>$\phi_0$</td>
-            <td class = "button">+</td>
-            <td class = "button">-</td>
+            <td class = "button t0">+</td>
+            <td class = "button t1">-</td>
             <td>$\phi_1$</td>
-            <td class = "button">+</td>
-            <td class = "button">-</td>
+            <td class = "button t1">+</td>
+            <td class = "button t2">-</td>
             <td>$\phi_2$</td>
-            <td class = "button">+</td>
+            <td class = "button t2">+</td>
         </tr>
     </table>
-    <table>
+    <table id = "ntable">
         <tr>
             <td>$\Delta\theta = $</td>
             <td>
@@ -91,6 +91,10 @@ function init(){
     phi1 = 0;
     phi2 = 0;
     
+    a0 = 1;
+    a1 = 0;
+    a2 = 0;
+    a3 = 0;
     main = document.getElementById("main");
 
     x = 0;
@@ -111,7 +115,7 @@ function init(){
     document.getElementById("phininput").value = phin;
     
     thetabuttons = document.getElementById("thetabuttonrow").getElementsByClassName("button");
-    phibuttons = document.getElementById("thetabuttonrow").getElementsByClassName("button");
+    phibuttons = document.getElementById("phibuttonrow").getElementsByClassName("button");
     
     redraw();
 }
@@ -138,6 +142,21 @@ function redraw(){
     drawBit(3,0,2,alphaB);//opacity is mod squared of |10> and |11>
     //ground state implies no "one" for either qubit, so nothing exists
 
+    a0 = Math.cos(theta0);
+    a1 = Math.sin(theta0)*Math.cos(theta1);
+    a2 = Math.sin(theta0)*Math.sin(theta1)*Math.cos(theta2);
+    a3 = Math.sin(theta0)*Math.sin(theta1)*Math.sin(theta2);
+    
+    document.getElementById("a0display").innerHTML = (Math.round(a0*100)/100).toString();
+    document.getElementById("a1display").innerHTML = (Math.round(a1*100)/100).toString();
+    document.getElementById("a2display").innerHTML = (Math.round(a2*100)/100).toString();
+    document.getElementById("a3display").innerHTML = (Math.round(a3*100)/100).toString();
+
+    document.getElementById("phi0display").innerHTML = (Math.round(((phi0%(2*Math.PI))/Math.PI)*100)/100).toString();
+    document.getElementById("phi1display").innerHTML = (Math.round(((phi1%(2*Math.PI))/Math.PI)*100)/100).toString();
+    document.getElementById("phi2display").innerHTML = (Math.round(((phi2%(2*Math.PI))/Math.PI)*100)/100).toString();
+
+    
 }
     
 
@@ -195,7 +214,48 @@ thetabuttons[1].onclick = function(){
     theta0 += Math.PI/thetan;
     redraw();
 }
+thetabuttons[2].onclick = function(){
+    theta1 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[3].onclick = function(){
+    theta1 += Math.PI/thetan;
+    redraw();
+}
+thetabuttons[4].onclick = function(){
+    theta2 -= Math.PI/thetan;
+    redraw();
+}
+thetabuttons[5].onclick = function(){
+    theta2 += Math.PI/thetan;
+    redraw();
+}
 
+
+phibuttons[0].onclick = function(){
+    phi0 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[1].onclick = function(){
+    phi0 += Math.PI/phin;
+    redraw();
+}
+phibuttons[2].onclick = function(){
+    phi1 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[3].onclick = function(){
+    phi1 += Math.PI/phin;
+    redraw();
+}
+phibuttons[4].onclick = function(){
+    phi2 -= Math.PI/phin;
+    redraw();
+}
+phibuttons[5].onclick = function(){
+    phi2 += Math.PI/phin;
+    redraw();
+}
 
 </script>
 
@@ -228,14 +288,41 @@ table{
 .button{
     border:solid;
     border-radius:10px;
-    background-color:green;
     border-width:3px;
     cursor:pointer;
+    width:40px;
+    font-size:30px;
+    text-align:center;
 }
 .button:hover{
-    background-color:#40ff40;
+    background-color:green;
 }
 .button:active{
     background-color:yellow;
+}
+.t0{
+    background-color:#ffafaf;
+}
+.t1{
+    background-color:#afffaf;
+}
+.t2{
+    background-color:#afafff;
+}
+.exponent{
+    position:relative;
+    top:-0.6em;
+}
+.inputtd{
+    border-top:solid;
+    border-width:4px;
+}
+.inputtd input{
+    font-family:courier;
+    width:2em;
+    font-size:36px;
+}
+#ntable{
+    font-size:36px;
 }
 </style>
